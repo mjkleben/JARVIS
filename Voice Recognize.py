@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import pyttsx3
 import urllib.request, urllib.parse #for Youtube
+from pytube import YouTube #for downloading YouTube videos
 import os, webbrowser,requests #for Google
 import re
 import requests
@@ -10,6 +11,8 @@ from comtypes import *
 import comtypes.client
 from ctypes import POINTER
 from ctypes.wintypes import DWORD, BOOL
+import time
+import threading
 
 
 currentDirectory = os.path.dirname(__file__)
@@ -139,7 +142,7 @@ enumerator = comtypes.CoCreateInstance(
 
 endpoint = enumerator.GetDefaultAudioEndpoint( 0, 1 )
 volume = endpoint.Activate( IID_IAudioEndpointVolume, comtypes.CLSCTX_INPROC_SERVER, None )
-
+#------------------------------------GETTING USER VOICE COMMAND------------------------
 def myCommand():
     #Listen for command
     command = ""
@@ -165,22 +168,18 @@ def myCommand():
     except Exception as e:
         pass
 
-    return command.strip()
-#------------------------YOUTUBER-----------------------------------------------
+    print("You said: " + command.strip())
 
-driver = webdriver.Chrome(chromedriverPath)
-print(chromedriverPath)
+    return command.strip()
+#------------------------YOUTUBER-------------------------------------------------------------------------------------------
+
 
 def youtube(command):
-    global driver
     global youtube_tab
     global youtube_open
+    global chromedriverPath
     youtube_open = True
 
-    try:
-        os.system("taskkill /F /IM chrome.exe")
-    except Exception as d:
-        pass
 
     #If it's youtube instead of play
     vid = command
@@ -198,62 +197,52 @@ def youtube(command):
         driver = webdriver.Chrome(chromedriverPath)
         driver.get(youtube_tab)
 
+        youtubeLinkFile = currentDirectory + "\scripts"
+        print(youtubeLinkFile)
+
+        with open(os.path.join(youtubeLinkFile, "youtube_link.txt"), "w") as write_tab:
+            write_tab.write(youtube_tab)
+
         print(youtube_tab)
         time.sleep(4)
 
-
     except Exception as e:
-        os.startfile("error.mp3")
+        pass
+        #os.startfile("error.mp3")
+
+def YouTubeToMp3():
+    musicdownloader_path = currentDirectory + "\scripts\musicdownloader.py"
+    os.system("python " + musicdownloader_path)
 
 
 def stop():
-    global youtube_open
+    #Basically stops every process going in on chrome
+
+    #Should make youtube_tab nothing because we stopped Chrome
+    global youtube_tab
+    youtube_tab = ""
+
     try:
         os.system("taskkill /F /IM chrome.exe")
         youtube_open = False
     except Exception as e:
         pass
+
+
+
+def downloadYouTube(url):
+    try:
+        desktop_path = str(os.path.join(os.environ['HOMEPATH'], 'Desktop'))
+        #print(desktop_path)
+        yt = YouTube(url.strip())
+        print("SECOND STEP")
+        yt.streams.first().download("C:" + desktop_path)
+
+    except:
+        print("Download failed. Check the link or try another link.")
+
+
 #------------------------------------------------------------------------------------------
-def computerMode(string):
-    print("Computer mode")
-    engine.say("Computer mode activated")
-    engine.runAndWait()
-    computerGoing = True
-    while computerGoing:
-
-
-        Message = ""
-        # check that recognizer and microphone arguments are appropriate type
-        if not isinstance(recognizer, sr.Recognizer):
-            raise TypeError("`recognizer` must be `Recognizer` instance")
-        if not isinstance(microphone, sr.Microphone):
-            raise TypeError("`microphone` must be `Microphone` instance")
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            r.pause_threshold = 1
-            r.adjust_for_ambient_noise(source, duration=1)
-            audio = r.listen(source, timeout=3, phrase_time_limit=10)
-
-        try:
-            print("TRYING")
-            command = r.recognize_google(audio).lower().strip()
-            print("YOUR COMPUTER COMMAND", command)
-            db.child("My_SentMsg").set(command)
-
-            if command[0:4] == "stop":
-                computerGoing = False
-            else:
-                pass
-
-        # loop back to continue to listen for commands if unrecognizable speech is received
-        except sr.UnknownValueError:
-            print("ERROR")
-            pass
-    engine.say("Computer mode stopped")
-    engine.runAndWait()
-    # print("UNKNOWN")
-
-
 def googler(to_search_for): #opens a google page in a new window
     search = to_search_for
 
@@ -298,12 +287,33 @@ def joke():
     else:
         engine.say('oops!I ran out of jokes')
         engine.runAndWait()
+
+def openApp(appName):
+    appName = appName.strip()
+    global currentDirectory
+    print(os.listdir(currentDirectory))
+    list = os.listdir(currentDirectory)
+
+    regexp = re.compile(appName)
+
+    for app in list:
+        app = app.lower()
+        print(app)
+        if appName in app:
+            os.startfile(currentDirectory + "\\" + app)
+            break
+
+
 #--------------------------------------------------USING THE COMMANDS-----------------------------------
 volumeLevel = int(volume.GetMasterVolumeLevel())
 volume.SetMasterVolumeLevel(-10 ,None)
+
+
 def assistant(command):
     global volumeLevel
     global youtube_open
+    global youtube_tab
+
     # print("-------------------------")
     # print("VOLUME LEVEL: ", volumeLevel)
     # print("---------------------------")
@@ -314,6 +324,8 @@ def assistant(command):
     if "hey john" == command or "john" == command:
         stop()
         os.startfile("answer.mp3")
+    elif command[0:4] == "open":
+        openApp(command[4:])
     elif "youtube" in command[0:7]:
         youtube(command)
     elif  "full screen" in command[0:12]:
@@ -343,9 +355,28 @@ def assistant(command):
             element.click()
         except:
             pass
+    elif command == "download video":
+        downloadYouTube(youtube_tab)
+
+    elif command == "download music":
+        download_thread = threading.Thread(target=YouTubeToMp3, args=())
+        download_thread.start()
     elif command == "stop":
         stop()
-
+    elif "google" in command[0:7]:
+        googler(command[7:])
+    elif command == "computer mode":
+        computerMode(command)
+    elif command == "goodbye john":
+        sys.exit(0)
+    elif 'joke' in command or "tell me a joke" in command:
+        joke()
+    elif command not in every_command and command != "":
+        if youtube_open == False:
+            pass
+        else:
+            pass
+    #-------------------------------------------------------------VOLUME SETTINGS
     elif "decrease volume" in command or "lower volume" in command:
         try:
             volume.SetMasterVolumeLevel(-20, None)
@@ -384,21 +415,6 @@ def assistant(command):
             engine.runAndWait()
         except:
             pass
-
-    elif "google" in command[0:7]:
-        googler(command[7:])
-
-    elif command == "computer mode":
-        computerMode(command)
-    elif command == "goodbye john":
-        sys.exit(0)
-    elif 'joke' in command or "tell me a joke" in command:
-        joke()
-    elif command not in every_command and command != "":
-        if youtube_open == False:
-            pass
-        else:
-            pass
     else:
         pass
         #os.startfile("error.mp3")
@@ -413,6 +429,6 @@ every_command = ["hey john", "john", "youtube", "google", "computer mode", "stop
 
 youtube_tab = ""
 youtube_open = False
-os.startfile(currentDirectory + "\sounds\start.mp3")
+#os.startfile(currentDirectory + "\sounds\start.mp3")
 while True:
     assistant(myCommand())
