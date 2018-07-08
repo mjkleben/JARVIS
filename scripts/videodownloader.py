@@ -13,4 +13,9 @@ def video_downloader2(url): #downloads music given a youtube link
     except:
         print("Download failed. Check the link or try another link.")
 
-video_downloader2("https://www.youtube.com/watch?v=BdsdgL4_wuY")
+link = ""
+
+with open(os.path.dirname(__file__) + "\youtube_link.txt", "r") as file_reader:
+    link = file_reader.readline()
+
+video_downloader2(link)

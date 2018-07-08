@@ -3,9 +3,9 @@ import time
 from selenium import webdriver
 
 def downloadYouTubemp3(url):
-    currentDirectory = os.path.dirname(__file__)
+    currentDirectory = os.path.dirname(__file__).replace("scripts", "")
     chromedriverPath = currentDirectory + "\setup\chromedriver.exe"
-
+    print(currentDirectory)
     try:
         youtube_url = url
 
@@ -51,7 +51,7 @@ def downloadYouTubemp3(url):
 
 link = ""
 
-with open("youtube_link.txt", "r") as file_reader:
+with open(os.path.dirname(__file__) + "\youtube_link.txt", "r") as file_reader:
     link = file_reader.readline()
 
 downloadYouTubemp3(link)
