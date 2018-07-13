@@ -2,9 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 import string
+from sa import main
 
 
 def scrape():
+    # main("hello")
+
     printable = set(string.printable)
 
     csv_file = open('news.csv', 'w')
