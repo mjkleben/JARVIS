@@ -8,3 +8,7 @@
 #         yt_link = "No Youtube Link!"
 #     print (yt_link)
 #     csv_writer.writerow([yt_link])
+list = ["Hello my name", "is Sung Joon"]
+for sentence in list:
+    for word in sentence.split(" "):
+        print(word)

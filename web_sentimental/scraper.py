@@ -3,16 +3,15 @@ import requests
 import csv
 import string
 from sa import main
+import json
 
 
 def scrape():
-    # main("hello")
-
     printable = set(string.printable)
 
     csv_file = open('news.csv', 'w')
     csv_writer = csv.writer(csv_file)
-    csv_writer.writerow(['NYTimes', 'WashingtonPost',
+    csv_writer.writerow(['NYTimes',  'WashingtonPost',
                          'CNN', 'FoxNews', 'WallStreet'])
     ny = [""]
     wp = [""]
@@ -27,7 +26,8 @@ def scrape():
         for article in soup.find_all('article'):
             for header in article.find_all('a'):
                 if(header.text and 'Comments' not in header.text and '\n' not in header.text and len(header.text.split(" ")) > 4):
-                    ny.append(filter(lambda x: x in printable, header.text))
+                    ny.append(
+                        ''.join(filter(lambda x: x in printable, header.text)))
 
     except (requests.ConnectionError):
         print ("ERROR. Invalid URL for NYTimes!")
@@ -41,7 +41,8 @@ def scrape():
         headlines = soup.find_all('div', class_='headline')
         for headline in headlines:
             if('\n' not in headline.a.text):
-                wp.append(filter(lambda x: x in printable, headline.a.text))
+                wp.append(
+                    ''.join(filter(lambda x: x in printable, headline.a.text)))
     except (requests.ConnectionError):
         print ("ERROR. Invalid URL for WashingtonPost!")
 
@@ -54,7 +55,8 @@ def scrape():
         articles = soup.find_all('a')
         for a in articles:
             if a.text and len(a.text.split(" ")) > 3 and '\n' not in a.text:
-                fn.append(filter(lambda x: x in printable, a.text))
+                fn.append(''.join(filter(lambda x: x in printable, a.text)))
+
     except (requests.ConnectionError):
         print ("ERROR. Invalid URL for WashingtonPost!")
 
@@ -67,7 +69,7 @@ def scrape():
         articles = soup.find_all('a')
         for a in articles:
             if a.text and len(a.text.split(" ")) > 3 and '\n' not in a.text:
-                ws.append(filter(lambda x: x in printable, a.text))
+                ws.append(''.join(filter(lambda x: x in printable, a.text)))
     except (requests.ConnectionError):
         print ("ERROR. Invalid URL for WashingtonPost!")
 
@@ -86,7 +88,35 @@ def scrape():
         if i < len(ws):
             ws_article = ws[i]
         csv_writer.writerow(
-            [ny_article.encode("utf-8"), wp_article.encode("utf-8"), cn_article.encode("utf-8"), fn_article.encode("utf-8"), ws_article.encode("utf-8")])
+            [ny_article, wp_article, cn_article, fn_article, ws_article])
+
+    count = 0
+    neg = 0
+    pos = 0
+    neutral = 0
+
+    templist = []
+    for i in range(1, len(ny)):
+        temp_neg = 0
+        temp_pos = 0
+        temp_neutral = 0
+        for word in ny[i].split(" "):
+            info = main(word)
+            file = open("info.json", "w")
+            json.dump(str(info), file)
+            file.write("")
+            info = json.loads(open("info.json").read())
+
+            temp_neg = temp_neg + info['probablity']['neg']
+            temp_pos = temp_pos + info['probablity']['pos']
+            temp_neutral = temp_neutral + info['probablity']['neutral']
+        templist.append([temp_neg, temp_pos, temp_neutral])
+        neg = neg + temp_neg
+        pos = pos + temp_pos
+        neutral = neutral + temp_neutral
+        count = 1+count
+
+    list = [neg, pos, neutral]
 
     csv_file.close()
 
