@@ -8,7 +8,22 @@
 #         yt_link = "No Youtube Link!"
 #     print (yt_link)
 #     csv_writer.writerow([yt_link])
-list = ["Hello my name", "is Sung Joon"]
-for sentence in list:
-    for word in sentence.split(" "):
-        print(word)
+# list = ["Hello my name", "is Sung Joon"]
+# for sentence in list:
+#     for word in sentence.split(" "):
+#         print(word)
+# string = list("~!@#$%^&*()_-+=1234567890{}[]\|?/><,.;:")
+# print(string)
+
+
+def ret():
+    return 5, 6
+
+
+def main():
+    a, b = ret()
+    print(a)
+    print(b)
+
+
+main()
