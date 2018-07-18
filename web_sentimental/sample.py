@@ -15,15 +15,10 @@
 # string = list("~!@#$%^&*()_-+=1234567890{}[]\|?/><,.;:")
 # print(string)
 
+# import datetime
+import os
 
-def ret():
-    return 5, 6
-
-
-def main():
-    a, b = ret()
-    print(a)
-    print(b)
-
-
-main()
+word = "hello my name is sung joon"
+info = os.popen("curl -d"+" 'text="+word+"' " +
+                "http://text-processing.com/api/sentiment/").read()
+print info
