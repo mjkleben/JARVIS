@@ -4,6 +4,14 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QMenu, Q
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QPixmap, QRegion
 from time import sleep
+import socket
+s = socket.socket()
+host = socket.gethostname()
+port = 12221
+s.bind((host, port))
+
+s.listen(5)
+c = None
 
 currentDirectory = os.path.dirname(__file__)
 # animateFile = open(os.path.join(currentDirectory, "animationCommand.txt"), "r")
@@ -18,8 +26,17 @@ def set_maid(n):
 class Animation(QThread):
     def not_now(self):
         global currentDirectory
+        animationAction = ""
+        input("Enter")
         while True:
-            animationAction = "on"
+            input("Enter")
+            if c is None:
+                input("Enter")
+                c, addr = s.accept()
+                print('Got connection from', addr)
+            else:
+                input("Enter")
+                print(c.recv(1024))
 
             animationAction = input("Enter: ")
 

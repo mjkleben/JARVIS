@@ -12,7 +12,8 @@ from gtts import gTTS  # Google text-to-speech
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-import pickle
+import socket
+
 
 try:
     from comtypes import *
@@ -43,6 +44,11 @@ driver.close()
 pygame.mixer.init()
 AnimationAction.init()
 
+s = socket.socket()
+host = socket.gethostname()
+port = 12221
+s.connect((host, port))
+print('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -176,12 +182,13 @@ except Exception as e:
 # ------------------------------------GETTING USER VOICE COMMAND, the Voice Recognition Part------------------------
 def myCommand():
     global currentDirectory
+    global s
     # Listen for command
     command = ""
     try:
         r = sr.Recognizer()
         print("Listening for command")
-
+        s.send("listening")
 
 
 
@@ -192,6 +199,7 @@ def myCommand():
 
         try:
             print("trying")
+            s.send("trying")
 
 
 
