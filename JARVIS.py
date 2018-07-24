@@ -22,9 +22,9 @@ try:
 except Exception as e:
     print("These modules are not supported by the operating system.")
 
-#Custom modules
+# Custom modules
 from changeSettings import changeAccent, changeDeviceName
-from YouTubeCommands import youtube, YouTubeToMp3,downloadYouTube,YouTubeCommands
+from YouTubeCommands import youtube, YouTubeToMp3, downloadYouTube, YouTubeCommands
 from mp3Player import playMp3
 from Google import googler
 import AnimationAction
@@ -40,7 +40,7 @@ chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
 driver.close()
 
-#Start mp3 player
+# Start mp3 player
 pygame.mixer.init()
 AnimationAction.init()
 
@@ -64,11 +64,9 @@ try:
     IID_IAudioEndpointVolume = \
         GUID('{5CDF2C82-841E-4546-9722-0CF74078229A}')
 
-
     class IMMDeviceCollection(IUnknown):
         _iid_ = GUID('{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}')
         pass
-
 
     class IAudioEndpointVolume(IUnknown):
         _iid_ = GUID('{5CDF2C82-841E-4546-9722-0CF74078229A}')
@@ -151,7 +149,6 @@ try:
         ]
         pass
 
-
     class IMMDeviceEnumerator(comtypes.IUnknown):
         _iid_ = GUID('{A95664D2-9614-4F35-A746-DE8DB63617E6}')
 
@@ -180,6 +177,8 @@ except Exception as e:
     print(e)
     print("Volume increase/decrease does not work with this OS")
 # ------------------------------------GETTING USER VOICE COMMAND, the Voice Recognition Part------------------------
+
+
 def myCommand():
     global currentDirectory
     global s
@@ -188,9 +187,12 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
+<<<<<<< HEAD
         s.send("listening")
 
 
+=======
+>>>>>>> d20e26c4a79e8c2a83bd5a61153a617853bb8fa2
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -200,8 +202,6 @@ def myCommand():
         try:
             print("trying")
             s.send("trying")
-
-
 
             command = r.recognize_google(audio).lower()
 
@@ -218,6 +218,8 @@ def myCommand():
 
     return command.strip()
 # -----------------------Joke Teller-----------------------------------------------
+
+
 def joke():
     global deviceLanguage
     global soundDirectory
@@ -238,6 +240,8 @@ def joke():
         pass
 
 # ----------------------------------Opens Apps in the MyApplications folder---------------------
+
+
 def openApp(appName):
     appName = appName.strip()
     global currentDirectory
@@ -254,6 +258,8 @@ def openApp(appName):
             break
 
 # ----------------------------------------Kill all current Chrome tabs/windows----------------------------
+
+
 def stop():
     # Basically stops every process going in on chrome
 
