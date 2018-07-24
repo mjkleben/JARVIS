@@ -1,16 +1,12 @@
 import speech_recognition as sr
 import os
-import webbrowser
 import re
 import requests
-import bs4
-from selenium import webdriver
 from ctypes import POINTER
 import threading
 import pygame
 from gtts import gTTS  # Google text-to-speech
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 import socket
 
@@ -27,14 +23,14 @@ from changeSettings import changeAccent, changeDeviceName
 from YouTubeCommands import youtube, YouTubeToMp3, downloadYouTube, YouTubeCommands
 from mp3Player import playMp3
 from Google import googler
-import AnimationAction
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
 soundDirectory = currentDirectory + r"/sounds//"
 chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 
+#Set up Chrome Driver
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
@@ -42,14 +38,14 @@ driver.close()
 
 # Start mp3 player
 pygame.mixer.init()
-AnimationAction.init()
 
+#Connect to the Animation
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
 port = 6969
-print(host)
+# print(host)
 s.connect((host, port))
-print ('Connected to', host)
+# print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -382,6 +378,7 @@ youtube_commands = ["full screen", "play", "pause", "skip", "skip video"]
 
 
 deviceLanguage = ""
+
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
 
@@ -397,6 +394,6 @@ youtube_open = False
 
 # ----------------------------------------------------------------------PROGRAM STARTS HERE
 # Basically the main function
-#playMp3(currentDirectory + "\sounds\start.mp3")
+#playMp3(currentDirectory + "/sounds/start.mp3")
 while True:
     assistant(myCommand())

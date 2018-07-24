@@ -5,11 +5,21 @@ from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QPixmap, QRegion
 from time import sleep
 import socket
+import subprocess
+import time
 
+currentDirectory = os.path.dirname(__file__)
 s = socket.socket()
 host = socket.gethostname()
 port = 6969
 s.bind((host, port))
+
+
+currentDirectory = os.path.dirname(__file__)
+JARVISDirectory = currentDirectory + "/JARVIS.py"
+p = subprocess.Popen([sys.executable, JARVISDirectory],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT)
 
 s.listen(5)
 c = None
@@ -19,8 +29,6 @@ try:
    print('Got connection from', addr)
 except Exception as e:
     print(e)
-
-currentDirectory = os.path.dirname(__file__)
 
 def set_maid(n):
     pic = QPixmap(n)  # Get Maid
