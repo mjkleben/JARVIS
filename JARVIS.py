@@ -44,11 +44,12 @@ driver.close()
 pygame.mixer.init()
 AnimationAction.init()
 
-s = socket.socket()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
-port = 12221
+port = 6969
+print(host)
 s.connect((host, port))
-print('Connected to', host)
+print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -187,12 +188,9 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
-<<<<<<< HEAD
-        s.send("listening")
+        s.sendall("listening".encode("utf-8"))
 
 
-=======
->>>>>>> d20e26c4a79e8c2a83bd5a61153a617853bb8fa2
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -201,7 +199,7 @@ def myCommand():
 
         try:
             print("trying")
-            s.send("trying")
+            s.sendall("trying".encode("utf-8"))
 
             command = r.recognize_google(audio).lower()
 
@@ -213,8 +211,6 @@ def myCommand():
             command = myCommand()
     except Exception as e:
         pass
-
-    print("You said: " + command.strip())
 
     return command.strip()
 # -----------------------Joke Teller-----------------------------------------------

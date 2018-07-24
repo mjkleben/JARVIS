@@ -5,16 +5,22 @@ from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QPixmap, QRegion
 from time import sleep
 import socket
+
 s = socket.socket()
 host = socket.gethostname()
-port = 12221
+port = 6969
 s.bind((host, port))
 
 s.listen(5)
 c = None
 
+try:
+   c, addr = s.accept()
+   print('Got connection from', addr)
+except Exception as e:
+    print(e)
+
 currentDirectory = os.path.dirname(__file__)
-# animateFile = open(os.path.join(currentDirectory, "animationCommand.txt"), "r")
 
 def set_maid(n):
     pic = QPixmap(n)  # Get Maid
@@ -26,26 +32,26 @@ def set_maid(n):
 class Animation(QThread):
     def not_now(self):
         global currentDirectory
+        global c
+        global addr
         animationAction = ""
-        input("Enter")
+
         while True:
-            input("Enter")
-            if c is None:
-                input("Enter")
-                c, addr = s.accept()
-                print('Got connection from', addr)
-            else:
-                input("Enter")
-                print(c.recv(1024))
+            placeholder = animationAction
 
-            animationAction = input("Enter: ")
+            while animationAction == placeholder:
+                animationAction = c.recv(1024).decode("utf-8")
 
-            if animationAction == "o":
+            # input("FINALLY")
+            # print(animationAction)
+            # input("New action")
+            print(animationAction)
+
+            if animationAction == "listening":
                 set_maid("jOn.png")
 
-            if animationAction == "p":
+            if animationAction == "trying":
                 set_maid("jOff.png")
-
 
     def run(self):
         print("Getting Ready.")
