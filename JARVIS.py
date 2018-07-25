@@ -30,9 +30,9 @@ import AnimationAction
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
-soundDirectory = currentDirectory + r"/sounds//"
-chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+soundDirectory = currentDirectory + r"/sounds/"
+chromedriverPath = currentDirectory + "/setup/chromedriver"
+setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
@@ -254,7 +254,7 @@ def stop():
     youtube_tab = ""
 
     try:
-        os.system("taskkill /F /IM chrome.exe")
+        os.system("taskkill /F /IM chrome")
         youtube_open = False
     except Exception as e:
         pass
@@ -262,8 +262,8 @@ def stop():
 
 # --------------------------------------------------USING THE COMMANDS-----------------------------------
 # Set the current volume to medium volume
-volumeLevel = int(volume.GetMasterVolumeLevel())
-volume.SetMasterVolumeLevel(-10, None)
+# volumeLevel = int(volume.GetMasterVolumeLevel())
+# volume.SetMasterVolumeLevel(-10, None)
 
 
 def assistant(command):
@@ -300,7 +300,6 @@ def assistant(command):
         YouTubeCommands(command)
     elif command == "download video":
         downloadYouTube(youtube_tab)
-
     elif command == "download music":
         download_thread = threading.Thread(target=YouTubeToMp3, args=())
         download_thread.start()

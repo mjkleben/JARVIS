@@ -2,13 +2,18 @@ import speech_recognition as sr
 import os
 import time
 from gtts import gTTS  # Google text-to-speech
+import pygame
+
+pygame.init()
 
 currentDirectory = os.path.dirname(__file__)
 soundDirectory = currentDirectory + r"/sounds//"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 deviceLanguage = ""
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
+
+
 def myCommand():
     # Listen for command
     command = ""
@@ -29,7 +34,7 @@ def myCommand():
         except sr.UnknownValueError:
             # print("UNKNOWN")
             print("in Except")
-            command = self.myCommand()
+            command = myCommand()
     except Exception as e:
         pass
 
@@ -38,7 +43,7 @@ def myCommand():
     return command.strip()
 
 
-#------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 
 def changeAccent():
@@ -52,7 +57,11 @@ def changeAccent():
     tts = gTTS("What would you like to change your language to?",
                lang=deviceLanguage)
     tts.save(os.path.join(soundDirectory, "WhichLanguage.mp3"))
-    os.startfile(os.path.join(soundDirectory, "WhichLanguage.mp3"))
+
+    pygame.mixer.music.load(os.path.join(soundDirectory, "WhichLanguage.mp3"))
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy() == True:
+        continue
 
     answer = ""
 
@@ -66,17 +75,23 @@ def changeAccent():
         langAbbrev = language.get(answer)
         # CHANGE LANGUAGE
         deviceLanguage = langAbbrev
-        langFilePath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+        langFilePath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
         with open(os.path.join(langFilePath, "lang.txt"), "w") as writeNewLang:
             writeNewLang.write(langAbbrev)
 
         tts = gTTS("Your language has been changed to " +
                    answer, lang=langAbbrev)
         tts.save(os.path.join(soundDirectory, "LanguageChanged.mp3"))
-        os.startfile(os.path.join(soundDirectory, "LanguageChanged.mp3"))
+        pygame.mixer.music.load(os.path.join(
+            soundDirectory, "LanguageChanged.mp3"))
+        pygame.mixer.music.play()
+        while pygame.mixer.music.get_busy() == True:
+            continue
     else:
         print("YOU STOPPED")
 # ------------------------------------------------NAME CHANGER--------------------------------------------
+
+
 def changeDeviceName():
     global deviceLanguage
     global currentDirectory
@@ -87,7 +102,10 @@ def changeDeviceName():
 
     tts = gTTS("What should my new name be?", lang=deviceLanguage)
     tts.save(os.path.join(soundDirectory, "NameQuestion.mp3"))
-    os.startfile(os.path.join(soundDirectory, "NameQuestion.mp3"))
+    pygame.mixer.music.load(os.path.join(soundDirectory, "NameQuestion.mp3"))
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy() == True:
+        continue
 
     time.sleep(2)
 
@@ -103,10 +121,14 @@ def changeDeviceName():
         elif answer == deviceName:
             tts = gTTS("That is already my name.", lang=deviceLanguage)
             tts.save(os.path.join(soundDirectory, "NameQuestion.mp3"))
-            os.startfile(os.path.join(soundDirectory, "NameQuestion.mp3"))
+            pygame.music.mixer.load(os.path.join(
+                soundDirectory, "NameQuestion.mp3"))
+            pygame.mixer.music.play()
+            while pygame.mixer.music.get_busy() == True:
+                continue
 
     # rewrite the new name.
-    newNameFilePath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+    newNameFilePath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
     with open(os.path.join(newNameFilePath, "device-name.txt"), "w") as writeNewName:
         writeNewName.write(answer)
     deviceName = answer
@@ -114,6 +136,8 @@ def changeDeviceName():
     tts = gTTS("Hi my name is " + answer +
                ". Happy to meet you", lang=deviceLanguage)
     tts.save(os.path.join(soundDirectory, "NewNameIntro.mp3"))
-    os.startfile(os.path.join(soundDirectory, "NewNameIntro.mp3"))
-
+    pygame.mixer.music.load(os.path.join(soundDirectory, "NewNameIntro.mp3"))
+    pygame.mixer.music.play()
+    while pygame.mixer.music.get_busy() == True:
+        continue
     time.sleep(2)
