@@ -17,9 +17,7 @@ s.bind((host, port))
 
 currentDirectory = os.path.dirname(__file__)
 JARVISDirectory = currentDirectory + "/JARVIS.py"
-p = subprocess.Popen([sys.executable, JARVISDirectory],
-                                    stdout=subprocess.PIPE,
-                                    stderr=subprocess.STDOUT)
+p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 s.listen(5)
 c = None
@@ -33,7 +31,7 @@ except Exception as e:
 def set_maid(n):
     pic = QPixmap(n)  # Get Maid
     maid.resize(pic.width(), pic.height())  # Resize the container
-    maid.move(0, 200 - pic.height())  # Keep Maid at bottom > 800
+    maid.move(0, 262 - pic.height())  # Keep Maid at bottom > 800
     maid.setPixmap(pic)
 
 
@@ -74,8 +72,8 @@ class Window(QWidget):
         QWidget.__init__(self, parent)
         self.setGeometry(0, 0, 800, 800)
         screen = QDesktopWidget().availableGeometry()
-        yPos = screen.height() - 200
-        xPos = screen.width() - 400
+        yPos = screen.height() - 262
+        xPos = screen.width() - 396
         self.move(xPos, yPos)
         # Lock on top
         self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)  # Important! Remove Border, Allow Transparency
@@ -85,8 +83,6 @@ class Window(QWidget):
         b_container = QLabel(self)  # Create Container for Background
         b_container.setPixmap(background)  # Set Container Image
         maid = QLabel(b_container)  # Create another container for the Maid
-
-
 
         # TEST /////////////////////////////
         # maid.setStyleSheet('border: 10px solid red;')  # Test
