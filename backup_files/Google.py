@@ -35,6 +35,5 @@ def googler(to_search_for):  # opens a google page in a new window
         for i in range(num_tabs):
             webbrowser.open('https://google.com' + links[i].get('href'))
 
-        print("DONE")
     except Exception as e:
         print(e)

@@ -4,31 +4,60 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QLabel, QMenu, Q
 from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtGui import QPixmap, QRegion
 from time import sleep
+import socket
+import subprocess
+import time
 
 currentDirectory = os.path.dirname(__file__)
-# animateFile = open(os.path.join(currentDirectory, "animationCommand.txt"), "r")
+s = socket.socket()
+host = socket.gethostname()
+port = 6969
+s.bind((host, port))
+
+
+currentDirectory = os.path.dirname(__file__)
+JARVISDirectory = currentDirectory + "/JARVIS.py"
+p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+s.listen(5)
+c = None
+
+try:
+   c, addr = s.accept()
+   print('Got connection from', addr)
+except Exception as e:
+    print(e)
 
 def set_maid(n):
     pic = QPixmap(n)  # Get Maid
     maid.resize(pic.width(), pic.height())  # Resize the container
-    maid.move(0, 200 - pic.height())  # Keep Maid at bottom > 800
+    maid.move(0, 262 - pic.height())  # Keep Maid at bottom > 800
     maid.setPixmap(pic)
 
 
 class Animation(QThread):
     def not_now(self):
         global currentDirectory
+        global c
+        global addr
+        animationAction = ""
+
         while True:
-            animationAction = "on"
+            placeholder = animationAction
 
-            animationAction = input("Enter: ")
+            while animationAction == placeholder:
+                animationAction = c.recv(1024).decode("utf-8")
 
-            if animationAction == "o":
+            # input("FINALLY")
+            # print(animationAction)
+            # input("New action")
+            print(animationAction)
+
+            if animationAction == "listening":
                 set_maid("jOn.png")
 
-            if animationAction == "p":
+            if animationAction == "trying":
                 set_maid("jOff.png")
-
 
     def run(self):
         print("Getting Ready.")
@@ -43,8 +72,8 @@ class Window(QWidget):
         QWidget.__init__(self, parent)
         self.setGeometry(0, 0, 800, 800)
         screen = QDesktopWidget().availableGeometry()
-        yPos = screen.height() - 200
-        xPos = screen.width() - 400
+        yPos = screen.height() - 262
+        xPos = screen.width() - 396
         self.move(xPos, yPos)
         # Lock on top
         self.setWindowFlags(Qt.Tool | Qt.FramelessWindowHint)  # Important! Remove Border, Allow Transparency
@@ -54,8 +83,6 @@ class Window(QWidget):
         b_container = QLabel(self)  # Create Container for Background
         b_container.setPixmap(background)  # Set Container Image
         maid = QLabel(b_container)  # Create another container for the Maid
-
-
 
         # TEST /////////////////////////////
         # maid.setStyleSheet('border: 10px solid red;')  # Test
