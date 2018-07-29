@@ -26,11 +26,11 @@ from Google import googler
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
-soundDirectory = currentDirectory + r"/sounds//"
-chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
+soundDirectory = currentDirectory + r"/sounds/"
+chromedriverPath = currentDirectory + "/setup/chromedriver/"
 setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 
-#Set up Chrome Driver
+# Set up Chrome Driver
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
@@ -39,7 +39,7 @@ driver.close()
 # Start mp3 player
 pygame.mixer.init()
 
-#Connect to the Animation
+# Connect to the Animation
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
 port = 6969
@@ -186,8 +186,6 @@ def myCommand():
         print("Listening for command")
         s.sendall("listening".encode("utf-8"))
 
-
-
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
             r.adjust_for_ambient_noise(source, duration=1)
@@ -260,7 +258,7 @@ def stop():
     youtube_tab = ""
 
     try:
-        os.system("taskkill /F /IM chrome.exe")
+        os.system("taskkill /F /IM chrome")
         youtube_open = False
     except Exception as e:
         pass

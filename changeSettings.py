@@ -4,8 +4,8 @@ import time
 from gtts import gTTS  # Google text-to-speech
 
 currentDirectory = os.path.dirname(__file__)
-soundDirectory = currentDirectory + r"/sounds//"
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+soundDirectory = currentDirectory + r"/sounds/"
+setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 deviceLanguage = ""
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
