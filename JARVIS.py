@@ -9,7 +9,10 @@ from gtts import gTTS  # Google text-to-speech
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import socket
-
+import urllib.request
+import urllib.parse  # for Youtube
+from pytube import YouTube  # for downloading YouTube videos
+import bs4
 
 try:
     from comtypes import *
@@ -20,31 +23,40 @@ except Exception as e:
 
 # Custom modules
 from changeSettings import changeAccent, changeDeviceName
-from YouTubeCommands import youtube, YouTubeToMp3, downloadYouTube, YouTubeCommands
+# from YouTubeCommands import youtube, YouTubeToMp3, downloadYouTube, YouTubeCommands
 from mp3Player import playMp3
-from Google import googler
+# from Google import googler
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
 soundDirectory = currentDirectory + r"/sounds//"
-chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
+chromedriverPath = currentDirectory + "/setup/chromedriver"
 setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 
 #Set up Chrome Driver
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
-driver.close()
+# chrome_options = Options()
+# chrome_options.add_argument("--headless")
+# driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
+# driver.close()
+driver = None
+
+#Variables for scrolling up or down
+scroll_num = 0
+scroll = str(270)
 
 # Start mp3 player
 pygame.mixer.init()
 
-#Connect to the Animation
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = socket.gethostname()
-port = 6969
-# print(host)
-s.connect((host, port))
+
+#driver closen? variable to see whether new driver has to be made
+driverClosen = False
+
+# Connect to the Animation
+# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# host = socket.gethostname()
+# port = 6969
+# # print(host)
+# s.connect((host, port))
 # print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
@@ -184,9 +196,7 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
-        s.sendall("listening".encode("utf-8"))
-
-
+        # s.sendall("listening".encode("utf-8"))
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -195,7 +205,7 @@ def myCommand():
 
         try:
             print("trying")
-            s.sendall("trying".encode("utf-8"))
+            # s.sendall("trying".encode("utf-8"))
 
             command = r.recognize_google(audio).lower()
 
@@ -207,8 +217,21 @@ def myCommand():
             command = myCommand()
     except Exception as e:
         pass
+    #
+    # s.sendall(command.encode("utf-8"))
 
+    print(("You said: " + command))
     return command.strip()
+
+def incognitoMode():
+    global chromedriverPath
+    global driver
+
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--incognito")
+
+    driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
+
 # -----------------------Joke Teller-----------------------------------------------
 
 
@@ -250,27 +273,164 @@ def openApp(appName):
             break
 
 # ----------------------------------------Kill all current Chrome tabs/windows----------------------------
-
-
 def stop():
+    global driver
+    global chromedriverPath
+    global driverClosen
+    if driver == None:
+        driver = webdriver.Chrome(chromedriverPath)
     # Basically stops every process going in on chrome
 
     # Should make youtube_tab nothing because we stopped Chrome
-    global youtube_tab
-    youtube_tab = ""
 
     try:
-        os.system("taskkill /F /IM chrome.exe")
+        driver.close()
+        driverClosen = True
         youtube_open = False
     except Exception as e:
         pass
 
 
 # --------------------------------------------------USING THE COMMANDS-----------------------------------
-# Set the current volume to medium volume
-volumeLevel = int(volume.GetMasterVolumeLevel())
-volume.SetMasterVolumeLevel(-10, None)
+# -------------------------------------YouTube and its commands-------------------------------
+def youtube(command):
+    global youtube_tab
+    global youtube_open
+    global driver
+    global chromedriverPath
+    global driverClosen
 
+    if driver == None:
+        driver = webdriver.Chrome(chromedriverPath)
+    if driverClosen == True:
+        driver = driver = webdriver.Chrome(chromedriverPath)
+        driverClosen = False
+
+
+    youtube_open = True
+
+    # If it's youtube instead of play
+    vid = command
+    if "youtube" == command[0:7]:
+        vid = vid[7:]
+    try:
+        vid_search = vid
+
+        query_string = urllib.parse.urlencode({"search_query": vid_search})
+        html_content = urllib.request.urlopen(
+            "http://www.youtube.com/results?" + query_string)
+        search_results = re.findall(
+            r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
+
+        top_result = "http://www.youtube.com/watch?v=" + search_results[0]
+        youtube_tab = top_result
+        driver.get(youtube_tab)
+
+        youtubeLinkFile = currentDirectory + "\scripts"
+
+        with open(os.path.join(youtubeLinkFile, "youtube_link.txt"), "w") as write_tab:
+            write_tab.write(youtube_tab)
+
+    except Exception as e:
+        print(e)
+        # os.startfile("error.mp3")
+
+
+def YouTubeToMp3():
+    musicdownloader_path = currentDirectory + "\scripts\musicdownloader.py"
+    os.system("python " + musicdownloader_path)
+
+
+def downloadYouTube(url):
+    try:
+        desktop_path = str(os.path.join(os.environ['HOMEPATH'], 'Desktop'))
+        # print(desktop_path)
+        yt = YouTube(url.strip())
+        print("SECOND STEP")
+        yt.streams.first().download("C:" + desktop_path)
+
+    except:
+        print("Download failed. Check the link or try another link.")
+
+
+def YouTubeCommands(command):
+    global driver
+    global chromedriverPath
+    if driver == None:
+        driver = webdriver.Chrome(chromedriverPath)
+
+    print("IN YOUTUBE COMMANDS")
+    if "full screen" in command:
+        try:
+            classname = 'button.ytp-fullscreen-button'
+            button = driver.find_element_by_css_selector(classname).click()
+        except Exception as e:
+            print(e)
+    elif "play" in command or "pause" in command:
+        try:
+            classname = 'button.ytp-play-button'
+            button = driver.find_element_by_css_selector(classname).click()
+        except Exception as e:
+            print(e)
+    elif "skip" in command or "skip video" in command:
+        try:
+            element = driver.find_element_by_css_selector("a.ytp-next-button")
+            element.click()
+        except Exception as f:
+            print(f)
+    elif "search youtube" == command[14:] or "youtube search" == command[14:]:
+        try:
+            element = driver.find_element_by_id("search")
+            element.send_keys(command[14:])
+            element.send_keys(u'\ue007')
+        except Exception as f0:
+            print(f0)
+
+# -------------------------------Googler---------------------------------------
+def googler(to_search_for):  # opens a google page in a new window
+    global driver
+    global chromedriverPath
+    if driver == None:
+        driver = webdriver.Chrome(chromedriverPath)
+    search = to_search_for
+
+    try:
+        print("Searching on Google...")
+
+        # How many tabs should be open? Code
+        how_many_tabs = 1
+        list = []
+        if not re.findall(r'\+\+(\w+)', search):
+            print("Finding top result for " + "'" + search + "'" + " ...")
+        if re.findall(r'\+\+(\w+)', search):
+            list = re.findall(r'\+\+(\w+)', search)
+            if int(list[0]):
+                how_many_tabs = int(list[0])
+                search, separator, old_string = search.partition(
+                    '++' + list[0])
+                print("Finding top " + str(how_many_tabs) +
+                      " results for " + "'" + search + "'" + " ...")
+
+        # Opening the tabs
+        res = requests.get('https://google.com/search?q=' + search)
+        soup = bs4.BeautifulSoup(res.text, 'lxml')
+        links = soup.select('.r a')
+        num_tabs = min(how_many_tabs, len(links))
+
+        for i in range(num_tabs):
+            driver.get('https://google.com' + links[i].get('href'))
+
+    except Exception as e:
+        print(e)
+
+
+#-------------------------------------VOLUME STUFF----------
+# Set the current volume to medium volume
+try:
+    volumeLevel = int(volume.GetMasterVolumeLevel())
+    volume.SetMasterVolumeLevel(-10, None)
+except:
+    print("Volume control is not supported by this OS")
 
 def assistant(command):
     global volumeLevel
@@ -279,19 +439,58 @@ def assistant(command):
     global deviceName
     global currentDirectory
     global driver
+    global scroll
+    global scroll_num
 
-    # Commands
+
+    #ROOT COMMAND
     if command == "hey " + deviceName or command == deviceName:
         stop()
         playMp3(currentDirectory + r"\sounds\answer.mp3")
-    elif command == "change voice" or command == "change accent":
-        changeAccent()
-    elif command == "change name" or command == "name change":
-        changeDeviceName()
-    elif command[0:4] == "open":
-        openApp(command[4:])
-    elif ("youtube" in command[0:7]) and ("search youtube" not in command) and ("youtube search" not in command):
-        youtube(command)
+
+    #Internet Commands
+    elif "incognito" == command or "incognito mode" == command:
+        incognitoMode()
+    elif "click" in command:
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().upper())
+            link.click()
+        except Exception as e:
+            print(e)
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().lower())
+            link.click()
+        except Exception as e:
+            print(e)
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().capitalize())
+            link.click()
+        except Exception as e:
+            print(e)
+
+    elif command == "go back":
+        driver.back()
+    elif command == "go forward":
+        driver.forward()
+    elif "refresh" in command:
+        driver.refresh()
+    elif command == "scroll down":
+        try:
+            driver.execute_script("window.scrollTo(0, " + scroll + ");")
+        except Exception as e:
+            print(e)
+        scroll_num += 370
+        scroll = str(scroll_num)
+    elif command == "scroll up":
+        if scroll_num > 370:
+            scroll_num -= 370
+            scroll = str(scroll_num)
+        try:
+            print("window.scrollTo(0, " + scroll + ");")
+            driver.execute_script("window.scrollTo(0, " + scroll + ");")
+        except Exception as e:
+            print(e)
+
     elif command == "minimize window":
         try:
             driver.set_window_position(-10000, 0)
@@ -302,28 +501,49 @@ def assistant(command):
             driver.maximize_window()
         except:
             pass
+
+
+        #Internet--YouTube
+    elif ("youtube" in command[0:7]) and ("search youtube" not in command) and ("youtube search" not in command):
+        youtube(command)
     elif command in youtube_commands:
         YouTubeCommands(command)
     elif command == "download video":
         downloadYouTube(youtube_tab)
-
     elif command == "download music":
         download_thread = threading.Thread(target=YouTubeToMp3, args=())
         download_thread.start()
+
+
+
+    #Setting Commands
+    elif command == "change voice" or command == "change accent":
+        changeAccent()
+    elif command == "change name" or command == "name change":
+        changeDeviceName()
+    elif command[0:4] == "open":
+        openApp(command[4:])
+
+
+
+    #Joke Teller
+    elif 'joke' in command or "tell me a joke" in command:
+        joke()
+
     elif command == "stop":
         stop()
     elif "google" in command[0:7]:
         googler(command[7:])
     elif command == "goodbye " + deviceName:
         exit(0)
-    elif 'joke' in command or "tell me a joke" in command:
-        joke()
-    elif command not in every_command and command != "":
-        if youtube_open == False:
-            pass
-        else:
-            pass
-    # -------------------------------------------------------------VOLUME SETTINGS
+
+    #Computer Commands
+    elif "sleep" in command:
+        print("YEET")
+        try:
+            os.system("shutdown.exe /h")
+        except Exception as e:
+            print(e)
     elif "decrease volume" in command or "lower volume" in command:
         try:
             volume.SetMasterVolumeLevel(-20, None)
@@ -333,6 +553,7 @@ def assistant(command):
             pass
     elif "increase volume" in command or "raise volume" in command:
         try:
+            print("Vol increased")
             volume.SetMasterVolumeLevel(-3, None)
             print(volume.GetMasterVolumeLevel())
             # engine.say("Volume increased")

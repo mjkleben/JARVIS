@@ -38,7 +38,6 @@ def youtube(command):
         driver.get(youtube_tab)
 
         youtubeLinkFile = currentDirectory + "\scripts"
-        print(youtubeLinkFile)
 
         with open(os.path.join(youtubeLinkFile, "youtube_link.txt"), "w") as write_tab:
             write_tab.write(youtube_tab)
