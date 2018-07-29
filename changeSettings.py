@@ -9,6 +9,8 @@ setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
 deviceLanguage = ""
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
+
+
 def myCommand():
     # Listen for command
     command = ""
@@ -38,7 +40,7 @@ def myCommand():
     return command.strip()
 
 
-#------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------
 
 
 def changeAccent():
@@ -77,6 +79,8 @@ def changeAccent():
     else:
         print("YOU STOPPED")
 # ------------------------------------------------NAME CHANGER--------------------------------------------
+
+
 def changeDeviceName():
     global deviceLanguage
     global currentDirectory
