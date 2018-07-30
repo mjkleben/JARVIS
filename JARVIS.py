@@ -10,7 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import socket
 import urllib.request
-import urllib.parse
+import urllib.parse  # for Youtube
 from pytube import YouTube  # for downloading YouTube videos
 import bs4
 
@@ -33,7 +33,6 @@ soundDirectory = currentDirectory + r"/sounds//"
 chromedriverPath = currentDirectory + "/setup/chromedriver"
 setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 
-<<<<<<< HEAD
 #Set up Chrome Driver
 # chrome_options = Options()
 # chrome_options.add_argument("--headless")
@@ -44,24 +43,14 @@ driver = None
 #Variables for scrolling up or down
 scroll_num = 0
 scroll = str(270)
-=======
-# Set up Chrome Driver
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(chromedriverPath, chrome_options=chrome_options)
-driver.close()
->>>>>>> 981cdd378eeebd3294357b41f4428aeded3f2ea9
 
 # Start mp3 player
 pygame.mixer.init()
 
-<<<<<<< HEAD
 
 #driver closen? variable to see whether new driver has to be made
 driverClosen = False
 
-=======
->>>>>>> 981cdd378eeebd3294357b41f4428aeded3f2ea9
 # Connect to the Animation
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
@@ -337,7 +326,7 @@ def youtube(command):
         youtube_tab = top_result
         driver.get(youtube_tab)
 
-        youtubeLinkFile = currentDirectory + "//scripts"
+        youtubeLinkFile = currentDirectory + "\scripts"
 
         with open(os.path.join(youtubeLinkFile, "youtube_link.txt"), "w") as write_tab:
             write_tab.write(youtube_tab)
