@@ -8,9 +8,11 @@ from selenium import webdriver
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
 soundDirectory = currentDirectory + r"/sounds//"
-chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
+chromedriverPath = currentDirectory + "/setup/chromedriver"
 
 # -------------------------------------YouTube and its commands-------------------------------
+
+
 def youtube(command):
     global youtube_tab
     global youtube_open

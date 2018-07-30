@@ -4,13 +4,12 @@ import time
 import os
 
 currentDirectory = os.path.dirname(__file__).replace("scripts", "")
-chromedriverPath = currentDirectory + "\setup\chromedriver.exe"
+chromedriverPath = currentDirectory + "\setup\chromedriver"
 
 driver = chromedriverPath
 
 
 driver = webdriver.Chrome(driver)
-
 
 
 # driver.set_window_position(-10000, 0)
@@ -23,4 +22,3 @@ try:
     element.send_keys(u'\ue007')
 except Exception as f0:
     print(f0)
-

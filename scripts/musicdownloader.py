@@ -2,9 +2,10 @@ import os
 import time
 from selenium import webdriver
 
+
 def downloadYouTubemp3(url):
     currentDirectory = os.path.dirname(__file__).replace("scripts", "")
-    chromedriverPath = currentDirectory + "\setup\chromedriver.exe"
+    chromedriverPath = currentDirectory + "\setup\chromedriver"
     print(currentDirectory)
     try:
         youtube_url = url
@@ -48,6 +49,7 @@ def downloadYouTubemp3(url):
         driver.quit()
     except Exception as e:
         print(e)
+
 
 link = ""
 

@@ -17,7 +17,11 @@ s.bind((host, port))
 
 currentDirectory = os.path.dirname(__file__)
 JARVISDirectory = currentDirectory + "/JARVIS.py"
+<<<<<<< HEAD
 # p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+=======
+p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+>>>>>>> 981cdd378eeebd3294357b41f4428aeded3f2ea9
 
 s.listen(5)
 c = None
