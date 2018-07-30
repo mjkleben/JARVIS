@@ -10,7 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import socket
 import urllib.request
-import urllib.parse  # for Youtube
+import urllib.parse
 from pytube import YouTube  # for downloading YouTube videos
 import bs4
 
@@ -326,7 +326,7 @@ def youtube(command):
         youtube_tab = top_result
         driver.get(youtube_tab)
 
-        youtubeLinkFile = currentDirectory + "\scripts"
+        youtubeLinkFile = currentDirectory + "//scripts"
 
         with open(os.path.join(youtubeLinkFile, "youtube_link.txt"), "w") as write_tab:
             write_tab.write(youtube_tab)
