@@ -55,10 +55,10 @@ class Animation(QThread):
             print(animationAction)
             if hidden == False:
                 if animationAction == "listening":
-                    set_maid("jOn.png")
+                    set_maid("jOn2.png")
 
                 if animationAction == "trying":
-                    set_maid("jOff.png")
+                    set_maid("jOff2.png")
             if animationAction == "hide":
                 hidden = True
                 set_maid("background.png")

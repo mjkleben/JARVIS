@@ -52,12 +52,12 @@ pygame.mixer.init()
 driverClosen = False
 
 # Connect to the Animation
-# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# host = socket.gethostname()
-# port = 6969
-# # print(host)
-# s.connect((host, port))
-# print ('Connected to', host)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+host = socket.gethostname()
+port = 6969
+# print(host)
+s.connect((host, port))
+print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -196,7 +196,7 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
-        # s.sendall("listening".encode("utf-8"))
+        s.sendall("listening".encode("utf-8"))
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -205,7 +205,7 @@ def myCommand():
 
         try:
             print("trying")
-            # s.sendall("trying".encode("utf-8"))
+            s.sendall("trying".encode("utf-8"))
 
             command = r.recognize_google(audio).lower()
 
