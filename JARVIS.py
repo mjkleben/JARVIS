@@ -52,12 +52,12 @@ pygame.mixer.init()
 driverClosen = False
 
 # Connect to the Animation
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = socket.gethostname()
-port = 6969
-# print(host)
-s.connect((host, port))
-print ('Connected to', host)
+# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# host = socket.gethostname()
+# port = 6969
+# # print(host)
+# s.connect((host, port))
+# print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -196,7 +196,7 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
-        s.sendall("listening".encode("utf-8"))
+        # s.sendall("listening".encode("utf-8"))
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -205,7 +205,7 @@ def myCommand():
 
         try:
             print("trying")
-            s.sendall("trying".encode("utf-8"))
+            # s.sendall("trying".encode("utf-8"))
 
             command = r.recognize_google(audio).lower()
 
@@ -424,6 +424,42 @@ def googler(to_search_for):  # opens a google page in a new window
         print(e)
 
 
+def clickHref(search_for):
+    global driver
+
+    try:
+        # input(driver.current_url)
+        driver.get(driver.current_url)
+        # Opening the tabs
+        res = requests.get(driver.current_url)
+        soup = bs4.BeautifulSoup(res.text, 'lxml')
+
+        links = str(soup.find_all('a')).split(",")
+        search_term = search_for
+        click_link = ""
+
+        print(links)
+        for i in links:
+            # print(i)
+            if search_term.lower() in i.lower():
+                i = i.split()
+                print(i)
+                for link in i:
+                    if "href" in link:
+                        click_link = link[6:len(link) - 1]
+        print("THIS IS CLICK_LINK: ", click_link)
+
+        if ".com" not in click_link and ".org" not in click_link:
+            driverURL = driver.current_url.split(".com")
+            print(driverURL)
+            goToLink = driverURL[0] + ".com" + click_link
+        print(goToLink)
+        driver.get(goToLink)
+
+
+    except Exception as e:
+        print(e)
+
 #-------------------------------------VOLUME STUFF----------
 # Set the current volume to medium volume
 try:
@@ -452,19 +488,26 @@ def assistant(command):
     elif "incognito" == command or "incognito mode" == command:
         incognitoMode()
     elif "click" in command:
+        # try:
+        #     link = driver.find_element_by_link_text(command[5:].strip().upper())
+        #     link.click()
+        # except Exception as e:
+        #     print(e)
+        #
+        # try:
+        #     link = driver.find_element_by_link_text(command[5:].strip().lower())
+        #     link.click()
+        # except Exception as e:
+        #     print(e)
+        #
+        # try:
+        #     link = driver.find_element_by_link_text(command[5:].strip().capitalize())
+        #     link.click()
+        # except Exception as e:
+        #     print(e)
+
         try:
-            link = driver.find_element_by_link_text(command[5:].strip().upper())
-            link.click()
-        except Exception as e:
-            print(e)
-        try:
-            link = driver.find_element_by_link_text(command[5:].strip().lower())
-            link.click()
-        except Exception as e:
-            print(e)
-        try:
-            link = driver.find_element_by_link_text(command[5:].strip().capitalize())
-            link.click()
+            clickHref(command[5:])
         except Exception as e:
             print(e)
 
