@@ -17,7 +17,7 @@ s.bind((host, port))
 
 currentDirectory = os.path.dirname(__file__)
 JARVISDirectory = currentDirectory + "/JARVIS.py"
-p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+# p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 s.listen(5)
 c = None
@@ -55,10 +55,10 @@ class Animation(QThread):
             print(animationAction)
             if hidden == False:
                 if animationAction == "listening":
-                    set_maid("jOn2.png")
+                    set_maid("jOn.png")
 
                 if animationAction == "trying":
-                    set_maid("jOff2.png")
+                    set_maid("jOff.png")
             if animationAction == "hide":
                 hidden = True
                 set_maid("background.png")

@@ -25,7 +25,29 @@ except Exception as e:
 from changeSettings import changeAccent, changeDeviceName
 # from YouTubeCommands import youtube, YouTubeToMp3, downloadYouTube, YouTubeCommands
 from mp3Player import playMp3
-# from Google import googler
+# from Google import
+from Controller import *
+
+
+#Setup controller
+
+#AUTHENTICATE FIREBASE AND LOGIN
+config = {
+  "apiKey": "AIzaSyCkpaEJfQBZh1aBufckYMPjI1hiktwsKlA",
+  "authDomain": "database-8a74e.firebaseapp.com",
+  "databaseURL": "https://database-8a74e.firebaseio.com",
+  "storageBucket": "database-8a74e.appspot.com"
+}
+email = "databasehost69@gmail.com"
+password = "123456database"
+firebase = initialize_app(config)
+# Get a reference to the auth service
+auth = firebase.auth()
+# Log the user in
+user = auth.sign_in_with_email_and_password(email, password)
+# Get a reference to the database service
+google_firebase = firebase.database()
+#--------------------------------------------------------------------------------------------------
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
 currentDirectory = os.path.dirname(__file__)
@@ -279,6 +301,9 @@ def stop():
     global driverClosen
     if driver == None:
         driver = webdriver.Chrome(chromedriverPath)
+        options = webdriver.ChromeOptions()
+        options.add_argument(r"user-data-dir=C:\Users\Minjea\AppData\Local\Google\Chrome\User Data")
+        driver = webdriver.Chrome(executable_path=chromedriverPath, chrome_options=options)
     # Basically stops every process going in on chrome
 
     # Should make youtube_tab nothing because we stopped Chrome
@@ -301,9 +326,13 @@ def youtube(command):
     global driverClosen
 
     if driver == None:
-        driver = webdriver.Chrome(chromedriverPath)
+        options = webdriver.ChromeOptions()
+        options.add_argument(r"user-data-dir=C:\Users\Minjea\AppData\Local\Google\Chrome\User Data")
+        driver = webdriver.Chrome(executable_path=chromedriverPath, chrome_options=options)
     if driverClosen == True:
-        driver = driver = webdriver.Chrome(chromedriverPath)
+        options = webdriver.ChromeOptions()
+        options.add_argument(r"user-data-dir=C:\Users\Minjea\AppData\Local\Google\Chrome\User Data")
+        driver = webdriver.Chrome(executable_path=chromedriverPath, chrome_options=options)
         driverClosen = False
 
 
@@ -357,7 +386,9 @@ def YouTubeCommands(command):
     global driver
     global chromedriverPath
     if driver == None:
-        driver = webdriver.Chrome(chromedriverPath)
+        options = webdriver.ChromeOptions()
+        options.add_argument(r"user-data-dir=C:\Users\Minjea\AppData\Local\Google\Chrome\User Data")
+        driver = webdriver.Chrome(executable_path=chromedriverPath, chrome_options=options)
 
     print("IN YOUTUBE COMMANDS")
     if "full screen" in command:
@@ -453,8 +484,8 @@ def clickHref(search_for):
             driverURL = driver.current_url.split(".com")
             print(driverURL)
             goToLink = driverURL[0] + ".com" + click_link
-        print(goToLink)
-        driver.get(goToLink)
+            print(goToLink)
+            driver.get(goToLink)
 
 
     except Exception as e:
@@ -477,6 +508,7 @@ def assistant(command):
     global driver
     global scroll
     global scroll_num
+    global google_firebase
 
 
     #ROOT COMMAND
@@ -484,27 +516,34 @@ def assistant(command):
         stop()
         playMp3(currentDirectory + r"\sounds\answer.mp3")
 
+
+    #Home automation
+    elif "unlock" in command:
+        google_firebase.child("door-state").set("unlock")
+    elif "lock" in command:
+        google_firebase.child("door-state").set("lock")
+
     #Internet Commands
     elif "incognito" == command or "incognito mode" == command:
         incognitoMode()
     elif "click" in command:
-        # try:
-        #     link = driver.find_element_by_link_text(command[5:].strip().upper())
-        #     link.click()
-        # except Exception as e:
-        #     print(e)
-        #
-        # try:
-        #     link = driver.find_element_by_link_text(command[5:].strip().lower())
-        #     link.click()
-        # except Exception as e:
-        #     print(e)
-        #
-        # try:
-        #     link = driver.find_element_by_link_text(command[5:].strip().capitalize())
-        #     link.click()
-        # except Exception as e:
-        #     print(e)
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().upper())
+            link.click()
+        except Exception as e:
+            print(e)
+
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().lower())
+            link.click()
+        except Exception as e:
+            print(e)
+
+        try:
+            link = driver.find_element_by_link_text(command[5:].strip().capitalize())
+            link.click()
+        except Exception as e:
+            print(e)
 
         try:
             clickHref(command[5:])
