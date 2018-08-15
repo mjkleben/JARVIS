@@ -513,9 +513,7 @@ def assistant(command):
 
     #ROOT COMMAND
     if command == "hey " + deviceName or command == deviceName:
-        stop()
         playMp3(currentDirectory + r"\sounds\answer.mp3")
-
 
     #Home automation
     elif "unlock" in command:
@@ -616,16 +614,13 @@ def assistant(command):
         stop()
     elif "google" in command[0:7]:
         googler(command[7:])
-    elif command == "goodbye " + deviceName:
-        exit(0)
-
-    #Computer Commands
-    elif "sleep" in command:
-        print("YEET")
-        try:
-            os.system("shutdown.exe /h")
-        except Exception as e:
-            print(e)
+    # #Computer Commands
+    # elif "sleep" in command:
+    #     print("YEET")
+    #     try:
+    #         os.system("shutdown.exe /h")
+    #     except Exception as e:
+    #         print(e)
     elif "decrease volume" in command or "lower volume" in command:
         try:
             volume.SetMasterVolumeLevel(-20, None)
