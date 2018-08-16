@@ -27,26 +27,26 @@ from changeSettings import changeAccent, changeDeviceName
 from mp3Player import playMp3
 # from Google import
 from Controller import *
-
+from HomeAutomation import *
 
 #Setup controller
 
 #AUTHENTICATE FIREBASE AND LOGIN
-config = {
-  "apiKey": "AIzaSyCkpaEJfQBZh1aBufckYMPjI1hiktwsKlA",
-  "authDomain": "database-8a74e.firebaseapp.com",
-  "databaseURL": "https://database-8a74e.firebaseio.com",
-  "storageBucket": "database-8a74e.appspot.com"
-}
-email = "databasehost69@gmail.com"
-password = "123456database"
-firebase = initialize_app(config)
-# Get a reference to the auth service
-auth = firebase.auth()
-# Log the user in
-user = auth.sign_in_with_email_and_password(email, password)
-# Get a reference to the database service
-google_firebase = firebase.database()
+# config = {
+#   "apiKey": "AIzaSyCkpaEJfQBZh1aBufckYMPjI1hiktwsKlA",
+#   "authDomain": "database-8a74e.firebaseapp.com",
+#   "databaseURL": "https://database-8a74e.firebaseio.com",
+#   "storageBucket": "database-8a74e.appspot.com"
+# }
+# email = "databasehost69@gmail.com"
+# password = "123456database"
+# firebase = initialize_app(config)
+# # Get a reference to the auth service
+# auth = firebase.auth()
+# # Log the user in
+# user = auth.sign_in_with_email_and_password(email, password)
+# # Get a reference to the database service
+# google_firebase = firebase.database()
 #--------------------------------------------------------------------------------------------------
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
@@ -517,9 +517,17 @@ def assistant(command):
 
     #Home automation
     elif "unlock" in command:
-        google_firebase.child("door-state").set("unlock")
+        google_firebase.child("door").set("unlock")
     elif "lock" in command:
-        google_firebase.child("door-state").set("lock")
+        google_firebase.child("door").set("lock")
+    elif ("on" in command) and ("kitchen" in command):
+        google_firebase.child("kitchen").set("on")
+    elif ("off" in command) and ("kitchen" in command):
+        google_firebase.child("kitchen").set("off")
+    elif ("on" in command) and ("living room" in command):
+        google_firebase.child("living-room").set("on")
+    elif ("off" in command) and ("living room" in command):
+        google_firebase.child("living-room").set("off")
 
     #Internet Commands
     elif "incognito" == command or "incognito mode" == command:
