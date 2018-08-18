@@ -4,18 +4,9 @@ import sys
 import os
 import subprocess
 from tkinter import Tk
+import time
+import pygame.font
 
-
-#Directories
-currentDirectory = os.path.dirname(__file__)
-setupDirectory = currentDirectory + "/setup/"
-JARVISDirectory = currentDirectory + "/JARVIS.py"
-jarvisImageOn = pygame.image.load(currentDirectory + '\images\jarvisOn1.png')
-jarvisImageOff = pygame.image.load(currentDirectory + '\images\jarvisOff1.png')
-background = pygame.image.load(currentDirectory + r'\images\black.png')
-jarvisImageOn2 = pygame.image.load(currentDirectory + '\images\jarvisOn2.png')
-jarvisImageOff2 = pygame.image.load(currentDirectory + '\images\jarvisOff2.png')
-background2 = pygame.image.load(currentDirectory + r'\images\silver.png')
 
 #Setting the display for pygame
 pygame.init()
@@ -26,6 +17,19 @@ gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FU
 pygame.display.set_caption("Jarvis")
 x = 390
 y = 150
+
+
+#Directories
+currentDirectory = os.path.dirname(__file__)
+setupDirectory = currentDirectory + "/setup/"
+JARVISDirectory = currentDirectory + "/JARVIS.py"
+jarvisImageOn = pygame.image.load(currentDirectory + '\images\jarvisOn1.png').convert_alpha()
+jarvisImageOff = pygame.image.load(currentDirectory + '\images\jarvisOff1.png').convert_alpha()
+background = pygame.image.load(currentDirectory + r'\images\black.png')
+jarvisImageOn2 = pygame.image.load(currentDirectory + '\images\jarvisOn2.png').convert_alpha()
+jarvisImageOff2 = pygame.image.load(currentDirectory + '\images\jarvisOff2.png').convert_alpha()
+background2 = pygame.image.load(currentDirectory + r'\images\silver.png')
+
 
 #Color of background
 black = (0, 0, 0)
@@ -58,6 +62,12 @@ try:
 except Exception as e:
     print(e)
 
+
+# text_font = pygame.font.SysFont("comic Sans MS", 30)
+#
+# def screen_message(msg):
+#     text = text_font.render(msg, False, (0, 0, 0))
+#     gameDisplay.blit(text, (0, 0))
 
 #Important Boolean Values
 keep_going = True
@@ -107,6 +117,13 @@ while keep_going:
         elif "hi" in animationAction or "hey" in animationAction:
             gameDisplay.blit(jarvisImageOn2, (x, y))
             jarvisDisplay = True
+    # if animationAction != "" and animationAction != "listening" and animationAction != "trying":
+    #     screen_message(animationAction)
+    #
+    #
+    # time.sleep(2)
+    #
+    # pygame.draw.rect(gameDisplay, (255,255,255), (0, 0, 500, 200))
 
     # currentDesignColor = temporaryColor
     pygame.display.update()
