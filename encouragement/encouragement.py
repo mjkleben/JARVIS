@@ -35,8 +35,43 @@ def getMotivQuotes(site):
     return array
 
 
-def analyze(user, source):
+def analyze(user, sources):
     # 1st priority: word count for content, 2nd priority: emotion detection
+    userInput = user.split(" ")
+
+    userDict = {}
+    sourceDict = {}
+    for word in userInput:
+        if(len(word) > 2 and word != "the" and word != "and" and word != ""):
+            if word not in userDict.keys():
+                userDict[word] = 1
+            else:
+                userDict[word] = userDict[word]+1
+
+    # analyze by relevant words count
+    count = 0
+    score = 0
+    for source in sources:
+        words_in_source = source.split(" ")
+        for word in userDict.keys():
+            if(word in words_in_source):
+                score = score + 1
+        sourceDict[count] = score
+        count = count + 1
+        score = 0
+
+    max = 0
+    i = 0
+    # Get the index with the highest score
+    for index in sourceDict.keys():
+        if sourceDict[index] > max:
+            max = sourceDict[index]
+            i = index
+
+    # Refer back to the index in sourceDict
+    response = sources[i]
+
+    return response
 
 
 def main():
@@ -55,7 +90,14 @@ def main():
 
     all = bible_verses
     all.extend(motiv_quotes)
-    print all
+
+    # testCase
+    userInput = "I feel completely empty today. Things just didn't work out. Work didn't go well. My head wasn't working right. My parents got mad at me for something I didn't do.."
+    print(analyze(userInput, all))
+
+    print(analyze(userInput, bible_verses))
+    print(analyze(userInput, motiv_quotes))
+
     # csv_file = open('verses.csv', 'w')
     # csv_writer = csv.writer(csv_file)
 
