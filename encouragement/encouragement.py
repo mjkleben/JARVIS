@@ -35,6 +35,10 @@ def getMotivQuotes(site):
     return array
 
 
+def analyze(user, source):
+    # 1st priority: word count for content, 2nd priority: emotion detection
+
+
 def main():
     bible_verses = []
     motiv_quotes = []
