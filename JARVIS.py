@@ -1,6 +1,5 @@
 import speech_recognition as sr
-import urllib.request
-import urllib.parse  # for Youtube
+import urllib  # Took out .parse and .request
 from pytube import YouTube  # for downloading YouTube videos
 import os
 import webbrowser
@@ -18,11 +17,12 @@ import threading
 from gtts import gTTS  # Google text-to-speech
 
 # Setting up the Chrome Selenium Webdriver and getting PATHs setup for easy access later with "global"
-currentDirectory = os.path.dirname(__file__)
+# currentDirectory = os.path.dirname(__file__)
+currentDirectory = "/Users/SJP/documents/personaldev/jarvis"
 soundDirectory = currentDirectory + r"/sounds//"
 #chromedriverPath = currentDirectory + "/setup/chromedriver.exe"
 chromedriverPath = currentDirectory + \
-    "/Users/SJP/documents/jarvis/setup/chromedriver.exe"
+    "/setup/chromedriver"
 driver = webdriver.Chrome(chromedriverPath)
 driver.close()
 
@@ -557,7 +557,7 @@ youtube_commands = ["full screen", "play", "pause", "skip", "skip video"]
 
 
 # SETUP WITH VOICE AND NAME
-setupPath = currentDirectory + "\setup\\"  # USE AS GLOBAL VARIABLE
+setupPath = currentDirectory + "/setup/"  # USE AS GLOBAL VARIABLE
 deviceLanguage = ""
 with open(os.path.join(setupPath, "lang.txt"), "r") as readLang:
     deviceLanguage = readLang.readline()
