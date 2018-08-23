@@ -17,7 +17,7 @@ s.bind((host, port))
 
 currentDirectory = os.path.dirname(__file__)
 JARVISDirectory = currentDirectory + "/JARVIS.py"
-# p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 s.listen(5)
 c = None
@@ -65,7 +65,7 @@ class Animation(QThread):
 
             if animationAction == "unhide":
                 hidden = False
-
+        print("ok")
     def run(self):
         print("Getting Ready.")
         sleep(1)

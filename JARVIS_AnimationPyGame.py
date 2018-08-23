@@ -12,8 +12,8 @@ import pygame.font
 pygame.init()
 display_width = 1280
 display_height = 800
-gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
-# gameDisplay = pygame.display.set_mode((display_width, display_height))
+# gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
+gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption("Jarvis")
 x = 390
 y = 150

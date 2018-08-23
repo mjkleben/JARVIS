@@ -520,10 +520,12 @@ def assistant(command):
         google_firebase.child("door").set("unlock")
     elif "lock" in command:
         google_firebase.child("door").set("lock")
+
     elif ("on" in command) and ("kitchen" in command):
-        google_firebase.child("kitchen").set("on")
+        google_firebase.child("device1").set("on")
     elif ("off" in command) and ("kitchen" in command):
-        google_firebase.child("kitchen").set("off")
+        google_firebase.child("device1").set("off")
+
     elif ("on" in command) and ("living room" in command):
         google_firebase.child("living-room").set("on")
     elif ("off" in command) and ("living room" in command):
