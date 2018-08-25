@@ -74,12 +74,12 @@ pygame.mixer.init()
 driverClosen = False
 
 # Connect to the Animation
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = socket.gethostname()
-port = 6969
-# print(host)
-s.connect((host, port))
-print ('Connected to', host)
+# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# host = socket.gethostname()
+# port = 6969
+# # print(host)
+# s.connect((host, port))
+# print ('Connected to', host)
 # -------------------------------------Volume Control Setup--------------------------------------
 try:
     MMDeviceApiLib = \
@@ -218,7 +218,7 @@ def myCommand():
     try:
         r = sr.Recognizer()
         print("Listening for command")
-        s.sendall("listening".encode("utf-8"))
+        # s.sendall("listening".encode("utf-8"))
 
         with sr.Microphone() as source:
             r.pause_threshold = 0.5
@@ -227,7 +227,7 @@ def myCommand():
 
         try:
             print("trying")
-            s.sendall("trying".encode("utf-8"))
+            # s.sendall("trying".encode("utf-8"))
 
             command = r.recognize_google(audio).lower()
 
@@ -240,7 +240,7 @@ def myCommand():
     except Exception as e:
         pass
     #
-    s.sendall(command.encode("utf-8"))
+    # s.sendall(command.encode("utf-8"))
 
     print(("You said: " + command))
     return command.strip()
@@ -516,10 +516,24 @@ def assistant(command):
         playMp3(currentDirectory + r"\sounds\answer.mp3")
 
     #Home automation
-    elif "unlock" in command:
-        google_firebase.child("door").set("unlock")
-    elif "lock" in command:
-        google_firebase.child("door").set("lock")
+    elif "unlock" in command and "door" in command:
+        google_firebase.child("open-lock").set("open")
+        time.sleep()
+    elif "open" in command and "door" in command:
+        google_firebase.child("open-lock").set("open")
+
+    elif "lock" in command and "door" in command:
+        google_firebase.child("open-lock").set("close")
+    elif "unlock" in command and "door" in command:
+        google_firebase.child("open-lock").set("close")
+
+    elif ("lights" in command) and ("on" in command) and ("kitchen" not in command) and ("living room" not in command):
+        google_firebase.child("device1").set("on")
+        google_firebase.child("device2").set("on")
+    elif ("lights" in command) and ("off" in command) and ("kitchen" not in command) and ("living room" not in command):
+        google_firebase.child("device1").set("off")
+        google_firebase.child("device2").set("off")
+
 
     elif ("on" in command) and ("kitchen" in command):
         google_firebase.child("device1").set("on")
@@ -527,9 +541,11 @@ def assistant(command):
         google_firebase.child("device1").set("off")
 
     elif ("on" in command) and ("living room" in command):
-        google_firebase.child("living-room").set("on")
+        google_firebase.child("device2").set("on")
     elif ("off" in command) and ("living room" in command):
-        google_firebase.child("living-room").set("off")
+        google_firebase.child("device2").set("off")
+
+
 
     #Internet Commands
     elif "incognito" == command or "incognito mode" == command:

@@ -1,0 +1,85 @@
+Metadata-Version: 2.1
+Name: fbchat
+Version: 1.3.9
+Summary: Facebook Chat (Messenger) for Python
+Home-page: https://github.com/carpedm20/fbchat/
+Author: Taehoon Kim
+Author-email: carpedm20@gmail.com
+Maintainer: Mads Marquart
+Maintainer-email: madsmtm@gmail.com
+License: BSD
+Project-URL: Repository, https://github.com/carpedm20/fbchat/
+Project-URL: Documentation, https://fbchat.readthedocs.io/
+Keywords: Facebook FB Messenger Chat Api Bot
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Communications :: Chat
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4.0
+Description-Content-Type: text/x-rst
+Requires-Dist: requests
+Requires-Dist: beautifulsoup4
+Requires-Dist: enum34; python_version < "3.4"
+
+fbchat: Facebook Chat (Messenger) for Python
+============================================
+
+.. image:: https://img.shields.io/badge/license-BSD-blue.svg
+    :target: LICENSE.txt
+    :alt: License: BSD
+
+.. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6%20pypy-blue.svg
+    :target: https://pypi.python.org/pypi/fbchat
+    :alt: Supported python versions: 2.7, 3.4, 3.5, 3.6 and pypy
+
+.. image:: https://readthedocs.org/projects/fbchat/badge/?version=master
+    :target: https://fbchat.readthedocs.io
+    :alt: Documentation
+
+.. image:: https://travis-ci.org/carpedm20/fbchat.svg?branch=master
+    :target: https://travis-ci.org/carpedm20/fbchat
+    :alt: Travis CI
+
+Facebook Chat (`Messenger <https://www.facebook.com/messages/>`__) for Python.
+This project was inspired by `facebook-chat-api <https://github.com/Schmavery/facebook-chat-api>`__.
+
+**No XMPP or API key is needed**. Just use your email and password.
+
+Go to `Read the Docs <https://fbchat.readthedocs.io>`__ to see the full documentation,
+or jump right into the code by viewing the `examples <https://github.com/carpedm20/fbchat/tree/master/examples>`__
+
+Installation:
+
+.. code-block:: console
+
+    $ pip install fbchat
+
+You can also install from source, by using `setuptools` (You need at least version 30.3.0):
+
+.. code-block:: console
+
+    $ git clone https://github.com/carpedm20/fbchat.git
+    $ cd fbchat
+    $ python setup.py install
+
+
+Maintainer
+----------
+
+- Mads Marquart / `@madsmtm <https://github.com/madsmtm>`__
+- Taehoon Kim / `@carpedm20 <http://carpedm20.github.io/about/>`__
+
+

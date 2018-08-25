@@ -14,6 +14,7 @@ display_width = 1280
 display_height = 800
 # gameDisplay = pygame.display.set_mode((display_width, display_height), pygame.FULLSCREEN)
 gameDisplay = pygame.display.set_mode((display_width, display_height))
+
 pygame.display.set_caption("Jarvis")
 x = 390
 y = 150
@@ -23,6 +24,7 @@ y = 150
 currentDirectory = os.path.dirname(__file__)
 setupDirectory = currentDirectory + "/setup/"
 JARVISDirectory = currentDirectory + "/JARVIS.py"
+JARVISPhone = currentDirectory + "/data.py"
 jarvisImageOn = pygame.image.load(currentDirectory + '\images\jarvisOn1.png').convert_alpha()
 jarvisImageOff = pygame.image.load(currentDirectory + '\images\jarvisOff1.png').convert_alpha()
 background = pygame.image.load(currentDirectory + r'\images\black.png')
@@ -51,6 +53,7 @@ host = socket.gethostname()
 port = 6969
 s.bind((host, port))
 p = subprocess.Popen([sys.executable, JARVISDirectory], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+b = subprocess.Popen([sys.executable, JARVISPhone], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
 s.listen(5)
 c = None
